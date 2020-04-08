@@ -1,20 +1,4 @@
-#include<stdio.h> // for I/O operations
-#include<stdlib.h> // for randomizing
-#include<time.h> // for random seed generation
-#include<windows.h>// for color to screen
-
-//initializing Global variables
-int Player1score, Player2score, Target;
-HANDLE rHnd, wHnd;
-
-void GetToss( char[] , char[], int );
-int initializeconsolehandles();
-void locate(int, int);
-int Batting ( char[] , char[], int );
-int Inning2( char[] , char[], int, int );
-void commentary(int, int);
-
-// strings for providing commentary dialogs
+#include"Server.h"
 
 char *six[] = { "\nEffortless! Brilliant! MAXIMUM!",
                 "\nOUT OF THE PARK FLIES THAT ONE! SIX RUNS!",
@@ -41,8 +25,6 @@ char * doubles[] = { "\nExquisite running between the wickets there. TWO runs.\n
                      "\nWonderful stroke but saved boundary. TWO runs.\n",
                      "\nTWO more runs to the total.\n",
                      "\nQuick running between the wickets earns them a DOUBLE.\n"};
-
-char * Extras[] = { "\nAn overthrow plus an extra is the last thing a bowler wants.\nFIVE RUNS to the total\n"};
 
 
 int index() // generation random numbers for commmentary
@@ -77,7 +59,7 @@ void welcome()
             locate(27,21);
             printf("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _");
             Sleep(250);
-            for(y=35;y<=42;y++)
+            for(y=30;y<=38;y++)
                 {
                     {
                         locate(27,y);
@@ -495,16 +477,4 @@ void locate(int x, int y)
     COORD pos = {x,y};
     SetConsoleCursorPosition (wHnd,pos);
 
-}
-
-// main function
-int main()
-{
-    system("cls");
-    initializeconsolehandles();
-    welcome();
-    Sleep(400);
-    system("cls");
-    system("color f3");
-    playgame();
 }
