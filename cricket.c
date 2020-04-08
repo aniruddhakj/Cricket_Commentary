@@ -5,8 +5,11 @@
 
 //initializing Global variables
 int Player1score, Player2score, Target;
+HANDLE rHnd, wHnd;
 
 void GetToss( char[] , char[], int );
+int initializeconsolehandles();
+void locate(int, int);
 int Batting ( char[] , char[], int );
 int Inning2( char[] , char[], int, int );
 void commentary(int, int);
@@ -24,9 +27,9 @@ char *fours[] = { "\nDriven nicely through the covers for FOUR runs!",
                   "\nFOUR! That's Great to watch from the neutral. Not so good for the bowler!"};
 
 char  *outs[] = { "\nOUT! He'll be kicking himself for that as he walks back to the pavilion",
-                 "\nOUT! Beautiful delivery!",
-                 "\nOUT! He tried to bite more than he could chew there as he's run out by an inch",
-                 "\nOops! Straight to the fielder and he doesn't miss it! BEAUTIFULLY TAKEN!\n" };
+                  "\nOUT! Beautiful delivery!",
+                  "\nOUT! He tried to bite more than he could chew there as he's run out by an inch",
+                  "\nOops! Straight to the fielder and he doesn't miss it! BEAUTIFULLY TAKEN!\n" };
 
 
 char *single[] = { "\nSINGLE.Excellent running between the wickets there",
@@ -47,6 +50,42 @@ int index() // generation random numbers for commmentary
     srand(time(0));
     int num = (rand() % 4);
     return num;
+}
+//
+void welcome()
+{
+            system("color f1");
+            int i,y;
+            locate(26,5);
+            printf(" _ _ _ _ _ _ _ _ _ _  _ _ _ _ ");
+            locate(27,7);
+            printf("*****************************");
+            locate(27,9);
+            printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c"
+                    ,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3);
+            locate(27,11);
+            printf(" %c%c%c!!! YOU ARE WELCOME !!!%c%c%c",2,2,2,2,2,2);
+            locate(39,13);
+            printf("TO");
+            locate(22,15);
+            printf(" %c%c%c%c Cricket Commentary Simulation %c%c%c%c",3,3,3,3,3,3);
+            locate(27,17);
+            printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%"
+                    ,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3);
+            locate(27,19);
+            printf("*****************************");
+            locate(27,21);
+            printf("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _");
+            Sleep(250);
+            for(y=35;y<=42;y++)
+                {
+                    {
+                        locate(27,y);
+                        Sleep(400);
+                    }
+                }
+            printf("\n");
+    system("color ff");
 }
 
 // Generating commentary dialogs
@@ -70,12 +109,13 @@ void commentary( int input, int notout )
     }
     else if ( input == 3 )
     {
-        notout == 0;
-        printf("%s\n", outs[2]  );
+        notout = 0;
+        printf("%s\n", outs[2] );
     }
     else if ( input == 5 )
     {
-        printf("%s\n", Extras[0]);
+        input = 4;
+        printf("%s\n", fours[index()]);
     }
     else if ( notout == 0 )
     {
@@ -89,10 +129,10 @@ void playgame()
     int Overs, totOvers, choice, Toss;
     char player1[50], player2[50];
     srand(time( 0 ));
-    printf("Enter Team 1 Name:");
+    printf("Enter Player 1 Name:");
     fflush(stdin);
     gets(player1);
-    printf("Enter Team 2 Name:");
+    printf("Enter Player 2 Name:");
     fflush(stdin);
     gets(player2);
     printf("Enter\n1 - Fixed Overs\n2 - Play Until Out\n3 - Exit\n");
@@ -110,10 +150,10 @@ Choose_again:
         {
             GetToss(player1, player2, 0);
         }
-    if ( choice >= 4 || choice <= 0 )
-    {
-        goto Choose_again;
-    }
+        if ( choice >= 4 || choice <= 0 )
+        {
+            goto Choose_again;
+        }
     }
 }
 
@@ -219,7 +259,7 @@ return Player1WinsToss;
 // Function for the first innings of play
 int Batting ( char Batsman[], char Bowler[], int Max_Overs )
 {
-    int i,j,battingScore,sum = 0,bowlerScore,flag = 1 ;
+    int i,j,battingScore, sum = 0, bowlerScore, flag = 1 ;
     char c;
     if( Max_Overs > 0)
     {
@@ -242,12 +282,12 @@ int Batting ( char Batsman[], char Bowler[], int Max_Overs )
                 battingScore=rand()%7;//Generate 0-6 runs
                 if( battingScore == bowlerScore )
                 {
-                    flag=0;
+                    flag = 0;
                     printf("-----------------%s is Out----------------\n",Batsman);
                     //printf("Got %d runs\n",battingScore);
                     printf("%s Total Score=%d\n",Batsman,sum);
                     if( sum == 0 )
-                    printf("----------- DUCK OUT -----------------\n");
+                        printf("----------- DUCK OUT -----------------\n");
                     commentary( battingScore, flag );
                     fflush(stdin);
                     scanf("%c", &c);
@@ -262,6 +302,8 @@ int Batting ( char Batsman[], char Bowler[], int Max_Overs )
                     if(battingScore==4)
                     printf("Its Four!\n");*/
                     commentary( battingScore, flag );
+                    if (battingScore == 3)
+                        battingScore = 0;
                     sum += battingScore;
                     //printf("%s Score = %d\n",Batsman,sum);
                     fflush(stdin);
@@ -289,7 +331,7 @@ int Batting ( char Batsman[], char Bowler[], int Max_Overs )
             scanf("%c",&c);
             fflush(stdin);
             battingScore=rand()%7;//Generate 0-6 runs
-            if(battingScore == bowlerScore)
+            if(battingScore == bowlerScore || battingScore == 3)
             {
                 flag = 0;
                 printf("-----------------%s is Out----------------\n",Batsman);
@@ -334,21 +376,21 @@ int Inning2 ( char Batsman[], char Bowler[], int Max_Overs, int Trg )
                 printf("%||Target : %d||\n", Trg);
                 printf("_______________________________________________________________\n");
                 printf("%d Runs required in %d Balls\n", Trg - sum, ((Max_Overs * 6) - ((i*6)+(j-1))));
-                totOvers--;
+                //totOvers--;
                 printf("_______________________________________________________________\n");
                 printf("%s Press Enter key to bowl : ",Bowler);
                 fflush(stdin);
                 scanf("%c",&c);
                 fflush(stdin);
-                bowlerScore=(int)rand()%7;//Generate from 0-6 where 0 means no ball
+                bowlerScore = (int)rand() % 7;//Generate from 0-6 where 0 means no ball
                 printf("%s Press Enter key to bat : ",Batsman);
                 fflush(stdin);
                 scanf("%c",&c);
                 fflush(stdin);
-                battingScore=rand()%7;//Generate 0-6 runs
+                battingScore = rand() % 7 ;//Generate 0-6 runs
                 if( battingScore == bowlerScore )
                 {
-                    flag=0;
+                    flag = 0;
                     printf("-----------------%s is Gone!----------------\n",Batsman);
                     commentary( battingScore, flag);
                     printf("%s Total Score=%d\n",Batsman,sum);
@@ -418,6 +460,8 @@ int Inning2 ( char Batsman[], char Bowler[], int Max_Overs, int Trg )
             }
             else
             {
+                if (battingScore == 5)
+                    battingScore = 4;
                 //printf("Got %d runs\n",battingScore);
                 commentary(battingScore, flag);
                 /*if(battingScore==6)
@@ -436,11 +480,31 @@ int Inning2 ( char Batsman[], char Bowler[], int Max_Overs, int Trg )
    }
 
 }
+int initializeconsolehandles()
+{
+    rHnd = GetStdHandle(STD_INPUT_HANDLE);
+    wHnd = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (rHnd && wHnd)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+void locate(int x, int y)
+{
+    COORD pos = {x,y};
+    SetConsoleCursorPosition (wHnd,pos);
+
+}
 
 // main function
 int main()
 {
     system("cls");
-    system("color f1");
+    initializeconsolehandles();
+    welcome();
+    Sleep(400);
+    system("cls");
+    system("color f3");
     playgame();
 }
